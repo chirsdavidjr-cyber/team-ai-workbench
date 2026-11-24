@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Databases
+*.db
+*.db-shm
+*.db-wal
+
+# Logs
+logs/
+*.log
+
+# User uploads & backups
+**/app/uploads/
+**/.backup/
+
+# IDE / tooling
+.DS_Store
+.trae/
+.trae-html-share-packages/
+.screenshots/

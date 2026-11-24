@@ -1,0 +1,109 @@
+{
+  "version": "2.0",
+  "serve_for": "中国太平洋产险（内部使用，不采本公司自有网页）",
+  "excludes": ["本公司自有网页 cpic.com.cn", "舆情监测类站点（黑猫投诉等）"],
+  "output_root": "~/InsuranceCollectorOutput",
+  "defaults": {
+    "days_range": 30,
+    "delay_seconds": 2,
+    "max_per_site": 200,
+    "fetch_full_content": true,
+    "desensitize": true,
+    "author": "公开署名才留"
+  },
+  "directions": [
+    {
+      "name": "行业",
+      "sites": [
+        {
+          "name": "中国保险行业协会",
+          "entry": "https://www.iachina.cn/",
+          "columns": ["协会动态", "新闻发布", "实践研究", "研究报告", "团体标准"],
+          "fetch": "WebFetch"
+        }
+      ]
+    },
+    {
+      "name": "监管",
+      "sites": [
+        {
+          "name": "国家金融监督管理总局",
+          "entry": "https://www.nfra.gov.cn/",
+          "columns": [
+            {"name": "公告通知", "url": "https://www.nfra.gov.cn/cn/view/pages/ItemList.html?itemPId=923&itemId=925&itemUrl=ItemListRightList.html&itemName=%E5%85%AC%E5%91%8A%E9%80%9A%E7%9F%A5"},
+            {"name": "政策法规", "url": "https://www.nfra.gov.cn/cn/view/pages/ItemList.html?itemPId=923&itemId=926&itemUrl=ItemListRightMore.html&itemName=%E6%94%BF%E7%AD%96%E6%B3%95%E8%A7%84"},
+            {"name": "行政处罚", "url": "https://www.nfra.gov.cn/cn/view/pages/ItemList.html?itemPId=923&itemId=931&itemUrl=zhengwuxinxi%2Fxingzhengchufabranch.html&itemName=%E8%A1%8C%E6%94%BF%E5%A4%84%E7%BD%9A"}
+          ],
+          "fetch": "WebFetch"
+        }
+      ]
+    },
+    {
+      "name": "同业",
+      "sites": [
+        {"name": "平安产险", "entry": "https://property.pingan.com/", "columns": ["产品", "企业客户", "公示内容"], "fetch": "WebFetch"},
+        {"name": "中国人保财险", "entry": "https://www.epicc.com.cn/", "columns": ["新闻中心", "公告", "产品服务"], "fetch": "WebFetch", "note": "首次采集前先探测可达性"}
+      ]
+    },
+    {
+      "name": "车险",
+      "sites": [
+        {"name": "国家金融监督管理总局", "entry": "https://www.nfra.gov.cn/", "columns": ["公告通知", "政策法规"], "fetch": "WebFetch"}
+      ],
+      "keywords_from": "keyword-bank.md 第四节·车险"
+    },
+    {
+      "name": "非车险",
+      "sites": [
+        {"name": "中国保险行业协会", "entry": "https://www.iachina.cn/", "columns": ["协会动态", "研究报告"], "fetch": "WebFetch"}
+      ],
+      "keywords_from": "keyword-bank.md 第四节·非车险"
+    },
+    {
+      "name": "健康险",
+      "sites": [
+        {"name": "国家医疗保障局", "entry": "https://www.nhsa.gov.cn/", "columns": ["政策", "通知公告"], "fetch": "WebFetch"},
+        {"name": "中国保险行业协会", "entry": "https://www.iachina.cn/", "columns": ["新闻发布", "研究报告"], "fetch": "WebFetch"}
+      ],
+      "keywords_from": "keyword-bank.md 第四节·健康险"
+    },
+    {
+      "name": "药监",
+      "sites": [
+        {
+          "name": "国家药品监督管理局",
+          "entry": "https://www.nmpa.gov.cn/",
+          "columns": [
+            {"name": "公告通告", "url": "https://www.nmpa.gov.cn/xxgk/ggtg/index.html"},
+            {"name": "法规文件", "url": "https://www.nmpa.gov.cn/xxgk/fgwj/index.html"},
+            {"name": "政策解读", "url": "https://www.nmpa.gov.cn/xxgk/zhcjd/index.html"}
+          ],
+          "fetch": "WebFetch"
+        }
+      ]
+    },
+    {
+      "name": "医保",
+      "sites": [
+        {
+          "name": "国家医疗保障局",
+          "entry": "https://www.nhsa.gov.cn/",
+          "columns": [
+            {"name": "政策", "url": "https://www.nhsa.gov.cn/col/col172/index.html"},
+            {"name": "通知公告", "url": "https://www.nhsa.gov.cn/col/col109/index.html"},
+            {"name": "医保动态", "url": "https://www.nhsa.gov.cn/col/col14/index.html"}
+          ],
+          "fetch": "WebFetch"
+        }
+      ]
+    }
+  ],
+  "keywords": {
+    "source": "references/keyword-bank.md",
+    "note": "关键词清单完整内联在 keyword-bank.md，本文件只引用方向，不复制关键词"
+  },
+  "privacy_fields_blocklist": [
+    "手机号", "身份证号", "住址门牌号", "真实姓名", "私信", "非公开群聊",
+    "订单号", "保单号", "客户编号", "银行卡号"
+  ]
+}

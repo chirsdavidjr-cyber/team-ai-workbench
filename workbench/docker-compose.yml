@@ -1,0 +1,43 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: wb-backend
+    restart: always
+    env_file: .env
+    environment:
+      # DB 与沙库落在数据卷（覆盖镜像默认值亦无妨，显式声明便于理解）
+      - DATABASE_URL=sqlite:////app/data/workbench.db
+      - DATASETS_DB=/app/data/datasets.db
+    volumes:
+      - wb-data:/app/data
+      - wb-uploads:/app/backend/uploads
+    expose:
+      - "8000"
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://127.0.0.1:8000/api/health"]
+      interval: 15s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # build 期固化 /api 反代目标（同源，浏览器无需知道后端地址）
+        BACKEND_ORIGIN: http://backend:8000
+    container_name: wb-frontend
+    restart: always
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      # 对外唯一入口：浏览器访问 http://<主机IP>:3200
+      - "3200:3000"
+
+volumes:
+  wb-data:
+  wb-uploads:

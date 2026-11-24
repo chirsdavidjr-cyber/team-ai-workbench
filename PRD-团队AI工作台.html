@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>团队 AI 工作台 PRD V0.1</title>
+<style>
+:root{
+  --ink:#1a1d24; --ink2:#4b5563; --ink3:#8b93a1;
+  --line:#e5e8ee; --bg:#f7f8fa; --card:#ffffff;
+  --brand:#0e9f6e; --brand-soft:#e6f7f0; --brand-line:#b8e6d2;
+  --warn-soft:#fdf3e3; --warn-line:#f0d9ad; --warn:#b7791f;
+  --danger:#c53030; --danger-soft:#fdeaea; --danger-line:#f2c4c4;
+  --info-soft:#eaf1fd; --info-line:#c4d7f2; --info:#2b6cb0;
+  --radius:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"PingFang SC","Microsoft YaHei","SF Pro Text",system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.75;font-size:15px}
+.wrap{max-width:1080px;margin:0 auto;padding:48px 40px 96px}
+header.doc{border-bottom:2px solid var(--ink);padding-bottom:24px;margin-bottom:32px}
+header.doc h1{font-size:28px;letter-spacing:.5px}
+header.doc .sub{color:var(--ink2);margin-top:8px}
+.meta{display:flex;flex-wrap:wrap;gap:24px;margin-top:16px;color:var(--ink2);font-size:13.5px}
+.meta b{color:var(--ink);font-weight:600;margin-right:6px}
+nav.toc{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 24px;margin-bottom:40px}
+nav.toc h2{font-size:15px;margin-bottom:10px}
+nav.toc ol{margin-left:20px;color:var(--ink2)}
+nav.toc a{color:var(--ink2);text-decoration:none}
+nav.toc a:hover{color:var(--brand)}
+section{margin-bottom:56px}
+h2.sec{font-size:22px;border-left:4px solid var(--brand);padding-left:12px;margin-bottom:20px;margin-top:8px}
+h3{font-size:17.5px;margin:28px 0 12px}
+h4{font-size:15.5px;margin:20px 0 8px;color:var(--ink)}
+p{margin-bottom:10px}
+ul,ol{margin:0 0 12px 22px}
+li{margin-bottom:6px}
+table{border-collapse:collapse;width:100%;background:var(--card);font-size:13.5px;margin:12px 0 16px;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line)}
+th{background:#eef1f5;text-align:left;padding:9px 12px;font-weight:600;white-space:nowrap}
+td{padding:9px 12px;border-top:1px solid var(--line);vertical-align:top}
+.tag{display:inline-block;font-size:12px;padding:1px 9px;border-radius:999px;border:1px solid var(--line);color:var(--ink2);margin-right:6px;white-space:nowrap}
+.tag.p0{background:var(--brand-soft);border-color:var(--brand-line);color:#065f46;font-weight:600}
+.tag.p1{background:var(--info-soft);border-color:var(--info-line);color:var(--info)}
+.tag.p2{background:#f1f2f4;color:var(--ink3)}
+.tbd{background:var(--warn-soft);border:1px solid var(--warn-line);color:var(--warn);border-radius:4px;padding:0 5px;font-size:12.5px;white-space:nowrap}
+.asm{background:var(--info-soft);border:1px solid var(--info-line);color:var(--info);border-radius:4px;padding:0 5px;font-size:12.5px;white-space:nowrap}
+.frid{font-weight:700;color:#065f46;background:var(--brand-soft);padding:1px 8px;border-radius:5px;font-size:13px;white-space:nowrap}
+.note{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--brand);border-radius:var(--radius);padding:14px 18px;margin:14px 0;font-size:14px;color:var(--ink2)}
+code{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:12.5px;background:#eef1f5;padding:1px 6px;border-radius:4px}
+pre{background:#141821;color:#d7dde8;border-radius:var(--radius);padding:16px 18px;font-size:12.5px;line-height:1.6;overflow-x:auto;margin:12px 0}
+pre code{background:none;color:inherit;padding:0}
+.demo{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);margin:18px 0;overflow:hidden}
+.demo .demo-head{background:#eef1f5;padding:10px 18px;font-size:13.5px;font-weight:600;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.demo .demo-head .link{font-weight:400;color:var(--ink3)}
+.demo .demo-body{padding:18px}
+.demo-hint{font-size:12.5px;color:var(--ink3);margin-top:10px}
+.btn{display:inline-block;border:1px solid var(--line);background:var(--card);border-radius:7px;padding:5px 14px;font-size:13px;cursor:pointer;color:var(--ink2)}
+.btn:hover{border-color:var(--brand);color:var(--brand)}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.primary:hover{opacity:.9;color:#fff}
+.btn.danger{color:var(--danger);border-color:var(--danger-line)}
+.btn.danger:hover{border-color:var(--danger)}
+.badge{display:inline-block;font-size:12px;padding:1px 10px;border-radius:999px;font-weight:600}
+.badge.ok{background:var(--brand-soft);color:#065f46}
+.badge.warn{background:var(--warn-soft);color:var(--warn)}
+.badge.bad{background:var(--danger-soft);color:var(--danger)}
+.badge.gray{background:#f1f2f4;color:var(--ink3)}
+.state-note{font-size:12.5px;color:var(--ink3);border-top:1px dashed var(--line);margin-top:12px;padding-top:8px}
+/* demo: home layout */
+.hm{display:flex;border:1px solid var(--line);border-radius:8px;height:430px;overflow:hidden;background:#fbfcfd}
+.hm-side{width:170px;border-right:1px solid var(--line);padding:12px 8px;background:#f2f4f7;flex-shrink:0}
+.hm-side .logo{font-weight:700;font-size:13px;padding:4px 10px 12px}
+.hm-item{padding:7px 10px;border-radius:7px;font-size:13px;color:var(--ink2);cursor:pointer;margin-bottom:2px}
+.hm-item:hover{background:#e8ecf1}
+.hm-item.on{background:var(--brand-soft);color:#065f46;font-weight:600}
+.hm-sep{font-size:11px;color:var(--ink3);padding:10px 10px 4px}
+.hm-conv{padding:5px 10px;font-size:12px;color:var(--ink3);border-radius:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hm-main{flex:1;padding:22px 26px;overflow:auto;min-width:0}
+.hm-main .hello{font-size:18px;font-weight:600;margin-bottom:4px}
+.hm-main .hello-sub{font-size:13px;color:var(--ink3);margin-bottom:16px}
+.toolcards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.tcard{border:1px solid var(--line);border-radius:9px;padding:10px 12px;background:#fff;cursor:pointer;transition:border .15s}
+.tcard:hover{border-color:var(--brand)}
+.tcard b{display:block;font-size:13px}
+.tcard span{font-size:11.5px;color:var(--ink3)}
+.hm-input{border:1.5px solid var(--line);border-radius:10px;background:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--ink3)}
+.hm-input .sel{font-size:12px;border:1px solid var(--line);border-radius:6px;padding:2px 8px;color:var(--ink2)}
+.hm-right{width:300px;border-left:1px solid var(--line);padding:14px 16px;overflow:auto;flex-shrink:0;background:#fff}
+.hm-right h5{font-size:13px;margin-bottom:10px;color:var(--ink2)}
+.rcard{border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:12px;margin-bottom:8px;background:#fbfcfd}
+.rcard b{display:block;font-size:12.5px;margin-bottom:3px}
+.rcite{border-left:3px solid var(--brand);padding-left:9px;color:var(--ink2);font-size:11.5px}
+.minibars{display:flex;align-items:flex-end;gap:8px;height:64px;padding:6px 4px 0}
+.minibars i{flex:1;background:var(--brand);opacity:.85;border-radius:3px 3px 0 0;position:relative}
+.minibars i em{position:absolute;bottom:-17px;left:0;right:0;text-align:center;font-style:normal;font-size:10px;color:var(--ink3)}
+/* demo: review */
+.rv{display:flex;gap:14px}
+.rv-queue{width:230px;flex-shrink:0}
+.rv-item{border:1px solid var(--line);border-radius:8px;padding:9px 12px;margin-bottom:8px;cursor:pointer;background:#fff;font-size:12.5px}
+.rv-item.on{border-color:var(--brand);background:var(--brand-soft)}
+.rv-item b{display:block;font-size:13px}
+.rv-item span{color:var(--ink3);font-size:11.5px}
+.rv-detail{flex:1;border:1px solid var(--line);border-radius:8px;padding:14px 16px;background:#fff;min-width:0}
+.rv-row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed var(--line);padding:7px 0;font-size:13px}
+.rv-doc{background:#fbfcfd;border:1px solid var(--line);border-radius:7px;padding:10px 12px;font-size:12.5px;color:var(--ink2);margin:10px 0;max-height:110px;overflow:auto}
+.pii{background:var(--warn-soft);border-bottom:2px solid var(--warn);border-radius:3px;padding:0 3px}
+.rv-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;align-items:center}
+.rv-reject{display:none;margin-top:12px;border:1px solid var(--danger-line);background:var(--danger-soft);border-radius:8px;padding:12px}
+.rv-reject.show{display:block}
+.rv-reject select,.rv-reject textarea{width:100%;border:1px solid var(--line);border-radius:6px;padding:6px 8px;font-size:13px;margin-top:8px;font-family:inherit}
+/* demo: askdata */
+.stepper{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.step{font-size:12.5px;border:1px solid var(--line);border-radius:999px;padding:3px 14px;color:var(--ink3);cursor:default}
+.step.on{background:var(--brand-soft);border-color:var(--brand-line);color:#065f46;font-weight:600}
+.ad-panel{border:1px solid var(--line);border-radius:8px;padding:14px 16px;background:#fff}
+.ad-q{font-size:15px;font-weight:600;margin-bottom:8px}
+.ad-chips{margin:8px 0 12px}
+.ad-chips .tag{cursor:default}
+.sqlbox{background:#141821;color:#d7dde8;border-radius:8px;padding:12px 14px;font-family:"SF Mono",Menlo,monospace;font-size:12px;line-height:1.65;margin:10px 0;white-space:pre-wrap}
+.bars{display:flex;align-items:flex-end;gap:22px;height:150px;padding:10px 8px 26px;border-bottom:1px solid var(--line);margin-top:8px}
+.bars .b{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%}
+.bars .b i{width:70%;background:var(--brand);border-radius:4px 4px 0 0}
+.bars .b em{font-style:normal;font-size:11px;color:var(--ink2);margin-bottom:4px}
+.bars .b s{text-decoration:none;font-size:11px;color:var(--ink3);margin-top:6px}
+.ad-err{display:none;border:1px solid var(--danger-line);background:var(--danger-soft);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--danger);margin-top:12px}
+.ad-err.show{display:block}
+footer{border-top:1px solid var(--line);margin-top:64px;padding-top:20px;color:var(--ink3);font-size:13px}
+@media (max-width:860px){.hm{flex-direction:column;height:auto}.hm-side,.hm-right{width:100%;border:none;border-bottom:1px solid var(--line)}.rv{flex-direction:column}.rv-queue{width:100%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="doc">
+  <h1>团队 AI 工作台 · 产品需求文档（PRD）</h1>
+  <div class="sub">面向 10 人小团队的一体化 AI 工作台：多模型对话 · 知识库 · 数据问数 · 可沉淀的工具库</div>
+  <div class="meta">
+    <span><b>版本</b>V0.1（待评审草案）</span>
+    <span><b>日期</b>2026-11-20</span>
+    <span><b>产品形态</b>Web 应用（浏览器访问，单机部署起步）</span>
+    <span><b>目标规模</b>10 人左右团队</span>
+  </div>
+</header>
+
+<nav class="toc">
+  <h2>目录</h2>
+  <ol>
+    <li><a href="#s1">背景与目标</a></li>
+    <li><a href="#s2">范围与分期</a></li>
+    <li><a href="#s3">产品模型：角色、对象与状态</a></li>
+    <li><a href="#s4">功能需求</a>（M1 首页与对话 / M2 工具库 / M3 知识库 / M4 数据库与问数 / M5 我的工作台 / M6 任务中心 / M7 管理后台）</li>
+    <li><a href="#s5">共享规则与例外</a></li>
+    <li><a href="#s6">开放问题</a></li>
+  </ol>
+</nav>
+
+<!-- ================= 1 背景与目标 ================= -->
+<section id="s1">
+  <h2 class="sec">1. 背景与目标</h2>
+  <h3>1.1 背景与问题</h3>
+  <p>团队的日常高频工作——意图分析、坐席能力评估、培训、文案、行研咨询、数据日报——目前分散在多个 AI 对话框、Excel 和个人笔记（Obsidian）中，存在以下可观察到的问题：</p>
+  <ul>
+    <li><b>经验不可复用</b>：成员各自调试有效的提示词、分析口径，无法沉淀给团队；同事重复走弯路。</li>
+    <li><b>知识与数据孤岛</b>：业务知识在个人笔记里，业务数据在 Excel 里，AI 无法统一挂载利用，每次问答都要手工贴上下文。</li>
+    <li><b>批量工作无任务化承载</b>：批量意图识别、周期性日报等长耗时工作只能靠人工盯着对话框完成，进度与结果无法管理。</li>
+    <li><b>模型与 Key 各自为政</b>：模型账号分散采购，无法按人管控与核算成本。</li>
+  </ul>
+  <h3>1.2 产品决策</h3>
+  <p>建设一个 <b>Web 形态的团队 AI 工作台</b>（harness 类产品，参照 Trae / WorkBuddy 的交互形态）：统一接入可配置的模型（国产 API 优先，预留国外模型接入），以<b>知识库与数据库为地基</b>，把可复用的提示词与资源组合封装为<b>团队工具库</b>，并以任务系统承载批量与定时工作。</p>
+  <h3>1.3 目标（可观察结果）</h3>
+  <ul>
+    <li>成员在<b>一个页面</b>内完成：选择模型对话、上传文档后获得<b>带引用出处</b>的回答、上传 Excel 后用自然语言问数并获得<b>图表与 SQL 溯源</b>。</li>
+    <li>一个好用的提示词组合可以封装成工具，经审核后<b>被全团队成员一键使用</b>，且使用者能看到使用次数与版本变更。</li>
+    <li>知识从个人库进入团队库前，必经 <b>AI 预审 + 管理员终审</b>；敏感个人信息在入库前被标记出来。</li>
+    <li>管理员可以看到<b>按人、按工具、按模型的用量</b>，成员在限额内使用。</li>
+  </ul>
+</section>
+
+<!-- ================= 2 范围 ================= -->
+<section id="s2">
+  <h2 class="sec">2. 范围与分期</h2>
+  <h3>2.1 进入条件</h3>
+  <p>系统在单机环境部署完成后，管理员初始化团队并创建成员账号；成员通过浏览器登录。</p>
+  <h3>2.2 P0 —— 首个可用版本（最小完整旅程）</h3>
+  <table>
+    <tr><th style="width:170px">能力</th><th>说明</th></tr>
+    <tr><td>账号与空间</td><td>注册登录、个人空间 / 团队空间、管理员与成员两种角色</td></tr>
+    <tr><td>首页与对话</td><td>多模型切换、流式回答、会话管理、对话内挂载资源（FR-HOME）</td></tr>
+    <tr><td>知识库 v1</td><td>Markdown / zip 上传、索引、带引用问答、个人库→团队库审核（FR-KB 核心项）</td></tr>
+    <tr><td>数据库 v1</td><td>Excel 上传落表、数据画像、语义层 AI 草稿、问数出表格与图表、查询审计（FR-DB 核心项）</td></tr>
+    <tr><td>模型接入</td><td>配置国产模型供应商与 API Key（OpenAI 兼容接口），预留国外模型配置位（FR-ADMIN-03）</td></tr>
+  </table>
+  <p><b>P0 完成证据：</b>一名新成员注册后，无需培训即可完成——① 选一个模型发起对话并获得流式回答；② 上传一份文档并向它提问，得到带引用出处的回答；③ 上传一份 Excel，用自然语言得到图表、可展开查看 SQL；管理员完成一次知识入库审核、看到一次用量统计。</p>
+  <p><b>P0 关键恢复路径：</b>上传失败（格式不支持 / 超限）给出明确原因并允许重试；问数 SQL 执行失败时展示原因与修正建议；模型调用超时或限额时可一键重发。</p>
+  <h3>2.3 P1 —— 团队化</h3>
+  <ul>
+    <li>工具库（应用壳、发布审核、版本管理、使用统计）<span class="tag p1">P1</span></li>
+    <li>异步任务中心（批量任务、进度、导出、失败重试）<span class="tag p1">P1</span></li>
+    <li>我的工作台（推荐版 + 自定义卡片）与待办<span class="tag p1">P1</span></li>
+    <li>语义层编辑器（人工确认修订 AI 草稿）<span class="tag p1">P1</span></li>
+    <li>完整审核流（知识 / 工具 / 数据集统一队列）<span class="tag p1">P1</span></li>
+  </ul>
+  <h3>2.4 P2 —— 增值能力</h3>
+  <ul>
+    <li>知识图谱：利用 Obsidian 双链关系增强检索与可视化<span class="tag p2">P2</span></li>
+    <li>定时任务与推送（日报类工具定时执行并推送到协作平台，渠道 <span class="tbd">TBD</span>）<span class="tag p2">P2</span></li>
+    <li>外部数据库只读接入（MySQL / PostgreSQL <span class="asm">Assumption</span>）<span class="tag p2">P2</span></li>
+    <li>成本看板、工具市场（评分、收藏）、本地 Obsidian 文件夹直连<span class="tag p2">P2</span></li>
+  </ul>
+  <h3>2.5 明确排除（避免分歧）</h3>
+  <ul>
+    <li>不做原生移动 App，移动端以响应式网页满足轻量查看 <span class="asm">Assumption</span></li>
+    <li>不内置模型训练 / 微调能力</li>
+    <li>不做多人实时协同编辑（同一文档同时编辑）</li>
+    <li>P0 不做外部数据库直连与定时推送</li>
+  </ul>
+</section>
+
+<!-- ================= 3 产品模型 ================= -->
+<section id="s3">
+  <h2 class="sec">3. 产品模型：角色、对象与状态</h2>
+  <h3>3.1 角色与权限总览</h3>
+  <table>
+    <tr><th>角色</th><th>说明</th><th>核心权限差异</th></tr>
+    <tr><td>管理员</td><td>初始化团队者默认为管理员，可指定其他管理员 <span class="asm">Assumption</span>；建议 ≥1 名</td><td>成员管理、统一审核（终审）、模型与 Key 配置、用量与审计查看、团队资源删除</td></tr>
+    <tr><td>成员</td><td>普通使用者</td><td>个人空间全部权限；团队资源的查看与使用；发起入库 / 发布申请</td></tr>
+  </table>
+  <p>详细的模块级权限矩阵见 <a href="#s5">第 5.1 节</a>（唯一定义处）。</p>
+  <h3>3.2 核心对象与生命周期</h3>
+  <table>
+    <tr><th style="width:110px">对象</th><th>定义</th><th style="width:300px">状态流转</th></tr>
+    <tr><td>会话</td><td>一次对话的载体；从工具进入的会话自动携带工具配置</td><td>进行中 → 已归档；已删除（回收站 <span class="asm">Assumption: 30 天</span>）</td></tr>
+    <tr><td>工具（应用）</td><td>可复用的能力封装 = 系统提示词 + 绑定资源（0..n 知识库 / 数据集）+ 开场白与推荐问题 + 输出模板 + 默认模型</td><td>草稿 → 待审 → 已发布 ⇄ 已下线；待审 → 已驳回 →（修改）→ 待审</td></tr>
+    <tr><td>知识文档</td><td>个人库或团队库中的一篇 Markdown 文档（保留目录结构与双链关系）</td><td>处理中 → 可用；待审 → 已入团队库 / 已驳回；可用 → 已归档</td></tr>
+    <tr><td>数据集</td><td>一次 Excel 上传落成的结构化表（个人 / 团队）</td><td>处理中 → 可用；待更新（源文件重新上传）</td></tr>
+    <tr><td>语义层</td><td>附属于数据集的业务描述集：表 / 字段含义、枚举值翻译、表间关系、指标口径</td><td>AI 草稿 → 已确认（人工修订后）；每次变更留版本记录</td></tr>
+    <tr><td>异步任务</td><td>批量或定时执行的工作单元（P1 起）</td><td>排队中 → 运行中 → 成功 / 失败 / 已取消；失败 → 重试</td></tr>
+    <tr><td>待办</td><td>手动创建或 AI 从对话中提取并经用户确认的事项</td><td>未完成 → 已完成；可设截止时间</td></tr>
+  </table>
+  <h3>3.3 空间与可见性规则</h3>
+  <ul>
+    <li><b>个人空间</b>默认仅本人与管理员<b>不可见</b>——管理员也不可查看成员个人库内容，仅可见其用量 <span class="asm">Assumption</span>；<b>团队空间</b>全员可见。</li>
+    <li><b>引用方向约束</b>：个人工具可绑定团队资源；团队工具只能绑定团队资源（防止团队工具因个人资源被删而失效）。</li>
+    <li>删除团队资源需管理员操作；删除产生回收站记录，期限内可恢复。</li>
+  </ul>
+</section>
+
+<!-- ================= 4 功能需求 ================= -->
+<section id="s4">
+  <h2 class="sec">4. 功能需求</h2>
+
+  <!-- M1 -->
+  <h3>M1 首页与对话 <span class="tag p0">P0</span></h3>
+  <h4>目的与布局</h4>
+  <p>首页是成员的默认工作入口。布局三区：<b>左侧边栏</b>（首页、我的工作台、工具库、知识库、数据库、任务中心、会话列表）；<b>中间主区</b>（未对话时显示欢迎语、常用工具卡与输入框；对话后在主区展开对话流）；<b>右侧展示区</b>（对话开始后出现，展示引用来源、图表、任务进度等结构化结果）。</p>
+
+  <div class="demo" id="demo-home">
+    <div class="demo-head"><span>演示：首页布局与三区协作</span><span class="link">关联 FR-HOME-01 / 02 / 03 / 05</span></div>
+    <div class="demo-body">
+      <div class="hm">
+        <div class="hm-side">
+          <div class="logo">团队 AI 工作台</div>
+          <div class="hm-item on" data-nav="首页">🏠 首页</div>
+          <div class="hm-item" data-nav="我的工作台">📊 我的工作台</div>
+          <div class="hm-item" data-nav="工具库">🧰 工具库</div>
+          <div class="hm-item" data-nav="知识库">📚 知识库</div>
+          <div class="hm-item" data-nav="数据库">🗄️ 数据库</div>
+          <div class="hm-item" data-nav="任务中心">⏳ 任务中心</div>
+          <div class="hm-sep">最近会话</div>
+          <div class="hm-conv">各渠道接通率分析</div>
+          <div class="hm-conv">质检标准第 3 版解读</div>
+          <div class="hm-conv">双 11 咨询意图分类</div>
+        </div>
+        <div class="hm-main">
+          <div class="hello">下午好，陆同学</div>
+          <div class="hello-sub" id="hm-sub">今天想从哪里开始？</div>
+          <div class="toolcards">
+            <div class="tcard"><b>意图分析</b><span>批量文本意图识别</span></div>
+            <div class="tcard"><b>问数</b><span>自然语言查数据集</span></div>
+            <div class="tcard"><b>文案助手</b><span>外呼话术生成</span></div>
+            <div class="tcard"><b>坐席能力评估</b><span>多维能力打分</span></div>
+            <div class="tcard"><b>行研咨询</b><span>行业情报速览</span></div>
+            <div class="tcard"><b>培训助手</b><span>新人培训问答</span></div>
+          </div>
+          <div class="hm-input"><span>向 AI 提问，或 @ 挂载知识库 / 数据集…</span><span class="sel">DeepSeek-V3 ▾</span></div>
+          <div style="margin-top:12px"><button class="btn primary" id="hm-start">▶ 模拟开始对话</button> <button class="btn" id="hm-reset" style="display:none">↺ 重置</button></div>
+        </div>
+        <div class="hm-right" id="hm-right">
+          <h5>展示区</h5>
+          <div id="hm-empty" style="color:var(--ink3);font-size:12.5px;border:1px dashed var(--line);border-radius:8px;padding:18px 12px;text-align:center">对话开始后，这里展示回答引用、图表与任务进度</div>
+          <div id="hm-filled" style="display:none">
+            <div class="rcard"><b>回答摘要</b>电话渠道接通率 87.3%，环比 +2.1pt；在线渠道满意度最高…<div style="margin-top:6px"><span class="tag" style="font-size:11px">查看完整回答</span></div></div>
+            <div class="rcard rcite"><b>引用 [1]</b> 11月运营周报.md · 团队知识库</div>
+            <div class="rcard rcite"><b>引用 [2]</b> 渠道日报.xlsx · 数据集：渠道指标</div>
+            <div class="rcard"><b>接通率对比</b>
+              <div class="minibars" style="margin-bottom:18px">
+                <i style="height:78%"></i><i style="height:52%"></i><i style="height:90%"></i><i style="height:40%"></i>
+                <em></em>
+              </div>
+              <div style="display:flex;gap:8px;font-size:10px;color:var(--ink3);justify-content:space-around;margin-top:-14px"><span>电话</span><span>在线</span><span>APP</span><span>邮件</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-hint">交互说明：点击左侧边栏可切换模块高亮；点击「模拟开始对话」观察右侧展示区从空状态到结果态的变化。工具卡与输入框上方的模型选择器为静态示意。</div>
+    </div>
+  </div>
+
+  <table>
+    <tr><th style="width:120px">编号</th><th style="width:150px">能力</th><th>需求描述（触发 → 规则 → 结果）</th></tr>
+    <tr><td><span class="frid">FR-HOME-01</span></td><td>工具卡入口 <span class="tag p0">P0占位</span><span class="tag p1">P1完整</span></td><td>欢迎页输入框上方展示常用工具卡：顺序为 <b>置顶 → 最近使用 → 管理员推荐</b>；P0 为占位卡（无工具库时显示引导文案「工具库上线后这里展示你的常用工具」），P1 接入真实工具数据。点击工具卡 = 以该工具配置发起会话。</td></tr>
+    <tr><td><span class="frid">FR-HOME-02</span></td><td>模型选择</td><td>输入框上方提供模型下拉，列表 = 管理员启用的模型（见 FR-ADMIN-03）。会话中途切换模型，<b>自下一条消息起生效</b>，历史消息保留原模型标注。无可用模型时输入框禁用并提示联系管理员。</td></tr>
+    <tr><td><span class="frid">FR-HOME-03</span></td><td>流式对话与过程展示</td><td>回答逐字流式呈现；模型调用了知识检索 / SQL / 工具时，在消息内折叠展示过程（检索了哪个库、执行了什么 SQL），默认折叠、点击展开。</td></tr>
+    <tr><td><span class="frid">FR-HOME-04</span></td><td>会话管理</td><td>会话按首条消息自动命名，可手动重命名、置顶、归档、删除；删除进入回收站，<span class="asm">Assumption: 保留 30 天</span>。会话列表按模块分组展示于侧边栏，支持搜索。</td></tr>
+    <tr><td><span class="frid">FR-HOME-05</span></td><td>引用溯源</td><td>凡基于知识库的回答必须带引用角标；点击角标在右侧展示区展开原文片段与来源（文档名 + 所属库 + 定位）。基于数据集的回答展示所用 SQL 与关键语义定义（见 FR-DB-03）。</td></tr>
+    <tr><td><span class="frid">FR-HOME-06</span></td><td>对话内挂载资源</td><td>输入 <code>@</code> 可临时挂载知识库或数据集，仅对当前会话生效，会话头部显示挂载标识，可随时解除。</td></tr>
+    <tr><td><span class="frid">FR-HOME-07</span></td><td>异常与恢复</td><td>模型调用超时 / 限流 / 余额不足：消息位展示失败原因与「重试」按钮，不计入有效计费展示；上下文超限时提示「新开会话或压缩历史」，用户选择后执行。知识库无相关内容时回答明确说明「知识库中未找到依据」，不得编造。</td></tr>
+  </table>
+
+  <!-- M2 -->
+  <h3>M2 工具库 <span class="tag p1">P1</span></h3>
+  <h4>目的</h4>
+  <p>把「提示词 + 资源绑定」的可复用组合封装为工具，是团队经验沉淀的核心载体。工具的地基是知识库与数据库：意图分析工具绑定意图标注规范文档，问数工具绑定渠道指标数据集，以此类推。</p>
+  <table>
+    <tr><th style="width:120px">编号</th><th style="width:150px">能力</th><th>需求描述</th></tr>
+    <tr><td><span class="frid">FR-TOOL-01</span></td><td>工具库视图</td><td>两个分组：<b>团队工具</b>（已发布，全员可见）与<b>我的工具</b>（本人草稿与已发布）。支持分类标签筛选（意图分析、坐席能力评估、培训、文案、行研、日报、问数…标签由管理员维护）与关键词搜索。</td></tr>
+    <tr><td><span class="frid">FR-TOOL-02</span></td><td>创建工具（应用壳）</td><td>表单字段：<b>名称</b>（必填，≤30字）、图标（可选，默认生成）、<b>描述与适用场景</b>（必填，≤200字）、<b>系统提示词</b>（必填）、绑定资源（0..n 知识库引用 + 0..n 数据集引用，受 3.3 引用方向约束）、开场白与推荐问题（可选）、输出模板（自由文本 / 表格 / JSON <span class="asm">Assumption</span>，默认自由文本）、默认模型。保存即草稿，草稿可立即自测。</td></tr>
+    <tr><td><span class="frid">FR-TOOL-03</span></td><td>使用工具</td><td>从工具卡或工具详情页进入即创建携带配置的会话；会话头部展示工具名与绑定资源，可「转为普通对话」（解除绑定）。</td></tr>
+    <tr><td><span class="frid">FR-TOOL-04</span></td><td>发布到团队</td><td>提交发布 → AI 预审（见 5.2 统一审核流：描述完整性、提示词可执行性、绑定资源有效性、敏感扫描）→ 管理员终审通过后进入团队工具列表。驳回理由必填并通知创建人。</td></tr>
+    <tr><td><span class="frid">FR-TOOL-05</span></td><td>版本管理</td><td>已发布工具的修改保存为新版本（v2、v3…），发布同样走审核；版本切换对使用者透明，但工具卡片显示「已更新至 vN」，使用者可选择继续用旧版直到下次新会话 <span class="asm">Assumption</span>。支持回滚到历史版本（同样走审核）。</td></tr>
+    <tr><td><span class="frid">FR-TOOL-06</span></td><td>工具信息卡</td><td>展示：创建人、版本号与更新时间、绑定资源、使用次数、收藏数、（P2）评分。绑定资源被删除或下线时，工具卡片标记「资源失效」，进入会话时提示创建人修复。</td></tr>
+  </table>
+
+  <!-- M3 -->
+  <h3>M3 知识库 <span class="tag p0">P0</span></h3>
+  <h4>目的与形态</h4>
+  <p>以 Obsidian 的使用心智组织团队知识：知识 = 一棵 Markdown 文档树，保留目录结构与 <code>[[双链]]</code>。个人库私有，团队库经审核共享。回答必须带引用。</p>
+  <table>
+    <tr><th style="width:120px">编号</th><th style="width:150px">能力</th><th>需求描述</th></tr>
+    <tr><td><span class="frid">FR-KB-01</span></td><td>库结构</td><td>每人生成一个个人库；一个团队库，内按主题文件夹组织（文件夹由管理员与成员共同维护，移动文档不改变引用）。列表视图 = 目录树 + 文档列表；文档预览支持渲染 Markdown 与双链跳转。</td></tr>
+    <tr><td><span class="frid">FR-KB-02</span></td><td>上传</td><td>支持单个 / 批量 <code>.md</code> 与 <code>.zip</code>（保留内部目录结构）。上传 Obsidian 整库 zip 时自动忽略 <code>.obsidian</code> 等配置目录 <span class="asm">Assumption: 首版 zip 上传；文件夹拖拽上传 P1；Git 同步 P2</span>。单文件与整库大小限额 <span class="tbd">TBD</span>。同名同路径文档上传时询问「替换或另存」。</td></tr>
+    <tr><td><span class="frid">FR-KB-03</span></td><td>处理管道</td><td>上传后自动：解析 → 切块 → 向量化 → 建索引。处理中文档状态为「处理中」、不可被检索；处理失败（如加密 zip、损坏文件）标红并允许重试或删除。处理完成人数在文档列表可见。</td></tr>
+    <tr><td><span class="frid">FR-KB-04</span></td><td>双链保留</td><td>解析 <code>[[双链]]</code> 与标签存储为文档关联关系；P0 仅存储与列表展示「被 n 篇引用」，P2 用于图谱可视化与检索增强。</td></tr>
+    <tr><td><span class="frid">FR-KB-05</span></td><td>检索问答</td><td>对挂载 / 绑定的库做检索增强回答；检索策略为混合检索（向量 + 关键词）。回答带引用角标（FR-HOME-05）；无命中时明确说明，不得编造。</td></tr>
+    <tr><td><span class="frid">FR-KB-06</span></td><td>入库审核</td><td>个人库文档「申请入团队库」→ AI 预审（查重、质量评估、敏感信息扫描，见 5.2）→ 管理员终审。通过后文档进入团队库指定文件夹；驳回附理由。演示见下方。</td></tr>
+    <tr><td><span class="frid">FR-KB-07</span></td><td>知识管理</td><td>文档可预览、替换更新（重新走索引）、归档、删除。团队库删除需管理员；删除进回收站可恢复（3.3 规则）。</td></tr>
+    <tr><td><span class="frid">FR-KB-08</span></td><td>对话沉淀</td><td>任意会话可「保存为知识」：AI 将该轮问答整理为 Markdown 草稿存入个人库，状态为「草稿」，<b>必须本人确认后才可被检索与申请入库</b>。</td></tr>
+  </table>
+
+  <div class="demo" id="demo-review">
+    <div class="demo-head"><span>演示：统一审核流（以知识入库为例）</span><span class="link">关联 FR-KB-06 · 共享规则 5.2</span></div>
+    <div class="demo-body">
+      <div class="rv">
+        <div class="rv-queue">
+          <div style="font-size:12px;color:var(--ink3);margin-bottom:8px">待审队列（3）</div>
+          <div class="rv-item on"><b>质检标准 V3 要点</b><span>知识 · 陆同学 · 10 分钟前</span></div>
+          <div class="rv-item"><b>外呼话术生成工具</b><span>工具 · 王同学 · 1 小时前</span></div>
+          <div class="rv-item"><b>双11渠道指标数据集</b><span>数据集 · 李同学 · 昨天</span></div>
+        </div>
+        <div class="rv-detail" id="rv-detail">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <b style="font-size:14.5px">质检标准 V3 要点.md</b><span id="rv-status"><span class="badge warn">待管理员终审</span></span>
+          </div>
+          <div class="rv-row"><span>AI 预审 · 查重</span><span>与《质检标准 V2》相似度 62% —— 通过（V3 含新增章节）</span></div>
+          <div class="rv-row"><span>AI 预审 · 质量评估</span><span>结构完整 B+：建议补充「申诉流程」小节（不阻断）</span></div>
+          <div class="rv-row"><span>AI 预审 · 敏感扫描</span><span style="color:var(--warn)">命中 1 处手机号（正文第 3 段）—— 需人工判断是否脱敏后入库</span></div>
+          <div class="rv-doc">……如遇客户投诉，可联系值班主管 <span class="pii">138****6621</span> 协助处理；质检申诉需在 T+1 内发起……</div>
+          <div class="rv-actions" id="rv-actions">
+            <button class="btn primary" id="rv-pass">✓ 通过，入团队库</button>
+            <button class="btn danger" id="rv-reject-btn">✕ 驳回</button>
+            <span style="font-size:12px;color:var(--ink3)">驳回需填写理由，将通知提交人</span>
+          </div>
+          <div class="rv-reject" id="rv-reject">
+            <b style="font-size:13px">驳回理由（必填）</b>
+            <select><option>与团队库已有知识重复</option><option>质量问题（结构/内容不达标）</option><option>含敏感信息，需脱敏后重提</option><option>其他</option></select>
+            <textarea rows="2" placeholder="补充说明（将展示给提交人）"></textarea>
+            <div style="margin-top:10px"><button class="btn danger" id="rv-reject-confirm">确认驳回</button> <button class="btn" id="rv-cancel">取消</button></div>
+          </div>
+          <div class="state-note" id="rv-note">状态说明：AI 预审自动完成，管理员只处理终审；「敏感扫描命中」不自动拦截，但高亮展示供人工判断。</div>
+        </div>
+      </div>
+      <div class="demo-hint">交互说明：点击「通过」或「驳回」观察状态徽标变化；驳回路径演示理由必填的表单态。</div>
+    </div>
+  </div>
+
+  <!-- M4 -->
+  <h3>M4 数据库与问数 <span class="tag p0">P0</span></h3>
+  <h4>目的</h4>
+  <p>让成员把 Excel 变成「可对话的数据集」：上传即建表，语义层让 AI 看懂字段业务含义，问数输出表格 / 图表 + SQL 溯源 + 解读诊断。语义层的质量决定问数准确率，因此语义层是本模块第一公民。</p>
+  <table>
+    <tr><th style="width:120px">编号</th><th style="width:150px">能力</th><th>需求描述</th></tr>
+    <tr><td><span class="frid">FR-DB-01</span></td><td>数据集创建</td><td>上传 <code>.xlsx / .csv</code> <span class="asm">Assumption</span>（单表 Sheet，多 Sheet 时逐个选择 <span class="asm">Assumption</span>）→ 自动落表 → 自动生成<b>数据画像</b>：行数、列清单、类型推断、空值率、每列样本值。画像随数据集展示，是语义层生成的输入。</td></tr>
+    <tr><td><span class="frid">FR-DB-02</span></td><td>语义层</td><td>落表后 AI 生成语义层<b>草稿</b>：每表 / 每字段的业务含义、枚举值翻译（如 <code>status=1 → 待处理</code>）、表间关系、常用指标口径（如「接通率 = 接通量/呼入量」）。P0 以草稿生效 + 问数对话中修正；P1 提供编辑器人工确认修订，修订记录版本。数据集更新（重新上传）后提示「语义层可能需要更新」并高亮结构差异。</td></tr>
+    <tr><td><span class="frid">FR-DB-03</span></td><td>问数</td><td>自然语言 → 检索相关表与语义定义 → 生成 SQL → <b>只读沙箱执行</b> → 表格 / 图表展示（图表类型由 AI 按数据形态选择，可手动切换）→ 支持基于上轮结果的追问。回答默认折叠展示所用 SQL 与引用的语义定义，点击展开。演示见下方。</td></tr>
+    <tr><td><span class="frid">FR-DB-04</span></td><td>诊断解读</td><td>结果附带 AI 解读卡：趋势变化、异常点、口径提示（说明用到了哪个指标定义）。解读可收起。</td></tr>
+    <tr><td><span class="frid">FR-DB-05</span></td><td>权限与审计</td><td>数据集分个人 / 团队（入库走统一审核流）；问数会话仅能访问已挂载 / 绑定的数据集；所有执行记录进入审计日志（人、时间、问题、SQL、耗时）供管理员查询。执行仅限只读语句，非只读语句直接拒绝并提示。</td></tr>
+    <tr><td><span class="frid">FR-DB-06</span></td><td>异常与恢复</td><td>SQL 执行失败：展示数据库返回原因 + 修正建议（如「字段 channel 未定义业务含义，可在语义层补充后重试」），支持一键重试；结果超过展示上限：分页 + 建议增加筛选条件；语义层为空的数据集问数时提示先完善语义。</td></tr>
+    <tr><td><span class="frid">FR-DB-07</span></td><td>外部数据库接入 <span class="tag p2">P2</span></td><td>以只读账号接入 MySQL / PostgreSQL <span class="asm">Assumption</span>，接入后与 Excel 数据集同等对待（画像 + 语义层 + 问数 + 审计）。</td></tr>
+  </table>
+
+  <div class="demo" id="demo-askdata">
+    <div class="demo-head"><span>演示：问数流程（含成功态与失败态）</span><span class="link">关联 FR-DB-02 / 03 / 04 / 06</span></div>
+    <div class="demo-body">
+      <div class="stepper">
+        <span class="step on" data-step="1">① 提问</span>
+        <span class="step" data-step="2">② 生成 SQL 并执行</span>
+        <span class="step" data-step="3">③ 图表与解读</span>
+      </div>
+      <div class="ad-panel" id="ad-p1">
+        <div class="ad-q">“上个月各渠道的接通率是多少？”</div>
+        <div class="ad-chips">
+          <span class="tag">挂载数据集：渠道指标（11月）</span><span class="tag">语义定义：6 张表 · 42 字段</span><span class="tag">渠道枚举：01电话 02在线 03APP 04邮件</span>
+        </div>
+        <button class="btn primary" data-go="2">生成 SQL ▶</button>
+        <button class="btn" id="ad-fail-open">模拟：执行失败路径</button>
+      </div>
+      <div class="ad-panel" id="ad-p2" style="display:none">
+        <div class="ad-q" style="font-size:13.5px">已生成 SQL（引用语义定义 3 项）</div>
+        <div class="sqlbox">SELECT channel_name,  -- 语义: 渠道名称(枚举翻译自 channel)
+       SUM(connected) / SUM(inbound) AS connect_rate  -- 指标: 接通率
+FROM channel_metrics_202611
+GROUP BY channel_name
+ORDER BY connect_rate DESC;</div>
+        <span class="badge ok">✓ 执行成功 · 0.4s · 4 行</span>
+        <div style="margin-top:12px"><button class="btn primary" data-go="3">查看结果 ▶</button> <button class="btn" data-go="1">◀ 上一步</button></div>
+      </div>
+      <div class="ad-panel" id="ad-p3" style="display:none">
+        <div class="ad-q">各渠道接通率（2026-11）</div>
+        <div class="bars">
+          <div class="b"><em>87.3%</em><i style="height:87%"></i><s>电话</s></div>
+          <div class="b"><em>92.1%</em><i style="height:92%"></i><s>在线</s></div>
+          <div class="b"><em>78.6%</em><i style="height:79%"></i><s>APP</s></div>
+          <div class="b"><em>64.2%</em><i style="height:64%"></i><s>邮件</s></div>
+        </div>
+        <div class="rcard" style="margin-top:20px"><b>AI 解读（可收起）</b>在线渠道接通率最高（92.1%）；邮件渠道显著低于均值，环比 -3.4pt，建议关注。口径：接通率 = 接通量 ÷ 呼入量（语义层 v2 定义）。</div>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap"><span style="font-size:13px;color:var(--ink3)">追问：</span><button class="btn">邮件渠道近 3 个月趋势</button><button class="btn">按团队拆分电话渠道</button></div>
+        <div style="margin-top:12px"><button class="btn" data-go="2">◀ 上一步</button> <button class="btn" id="ad-view-sem">展开语义定义</button></div>
+        <div class="sqlbox" id="ad-sem" style="display:none;margin-top:10px">channel: 枚举 01=电话, 02=在线, 03=APP, 04=邮件
+connect_rate: 指标「接通率」= SUM(connected)/SUM(inbound)，2026-11 起剔除测试呼入
+team: 归属团队，与坐席表关联键 staff_id</div>
+      </div>
+      <div class="ad-err" id="ad-fail">
+        <b>执行失败：column "cust_sat" does not exist</b><br>
+        建议：字段 <code>cust_sat</code> 未在语义层定义，可能想表达「满意度」(<code>satisfaction_score</code>)。<button class="btn" style="margin-left:8px">按建议修正并重试</button> <button class="btn">去语义层补充定义</button>
+      </div>
+      <div class="state-note">状态说明：③ 中演示了成功态；「模拟执行失败路径」演示 FR-DB-06 的失败原因 + 修正建议 + 一键重试。追问演示多轮上下文。</div>
+    </div>
+  </div>
+
+  <!-- M5 -->
+  <h3>M5 我的工作台 <span class="tag p1">P1</span></h3>
+  <table>
+    <tr><th style="width:120px">编号</th><th style="width:150px">能力</th><th>需求描述</th></tr>
+    <tr><td><span class="frid">FR-WORK-01</span></td><td>默认版工作台</td><td>按角色推荐初始卡片。成员：最近会话、我的工具、待办、任务进度、我关注资源的更新动态。管理员额外：审核队列（含待审数）、团队用量概览。首次进入即呈现默认版。</td></tr>
+    <tr><td><span class="frid">FR-WORK-02</span></td><td>自定义</td><td>卡片可增删、拖拽排序，布局保存为个人配置；提供「恢复默认」。卡片来源 = 系统卡片清单（不开放自由开发）<span class="asm">Assumption</span>。</td></tr>
+    <tr><td><span class="frid">FR-WORK-03</span></td><td>待办</td><td>两个来源：① 手动创建（标题 + 可选截止时间）；② AI 从对话中识别行动项（如「明天整理一份口径说明」）生成<b>待办建议</b>，经用户在会话内确认后加入工作台；不确认不入库。</td></tr>
+    <tr><td><span class="frid">FR-WORK-04</span></td><td>动态订阅</td><td>成员可关注知识文档 / 数据集 / 工具；被关注对象发生更新（新版本、重新上传、语义修订）时，动态卡片按时间线展示，点击跳转对象。</td></tr>
+    <tr><td><span class="frid">FR-WORK-05</span></td><td>多工作台</td><td>成员可创建<b>多个工作台</b>（如「主控室 / 日常工作 / 舆情看板」各场景一台）：顶部标签页切换，支持新建、重命名、删除（至少保留一个）；每个工作台独立保存 FR-WORK-02 的卡片布局，上次使用的工作台自动恢复。<span class="asm">V0.2 新增（2026-11-21）</span></td></tr>
+  </table>
+
+  <!-- M6 -->
+  <h3>M6 任务中心 <span class="tag p1">P1</span></h3>
+  <table>
+    <tr><th style="width:120px">编号</th><th style="width:150px">能力</th><th>需求描述</th></tr>
+    <tr><td><span class="frid">FR-TASK-01</span></td><td>任务列表</td><td>侧边栏「任务中心」入口；视图：全部 / 我发起的 / 进行中 / 失败。列表字段：任务名（工具 + 输入摘要）、发起人、状态、进度、耗时、结果入口。</td></tr>
+    <tr><td><span class="frid">FR-TASK-02</span></td><td>批量任务</td><td>工具可声明批量输入（如意图分析粘贴 / 上传批量文本）→ 创建异步任务排队执行 → 实时进度（n/total）→ 完成后结果可在线查看与导出（xlsx / csv <span class="asm">Assumption</span>）。任务运行期间发起人可离线。</td></tr>
+    <tr><td><span class="frid">FR-TASK-03</span></td><td>失败处理</td><td>失败任务展示失败环节与原因；支持整体重试；批量任务部分失败时成功部分保留、失败部分可单独重跑 <span class="asm">Assumption</span>。</td></tr>
+    <tr><td><span class="frid">FR-TASK-04</span></td><td>定时任务 <span class="tag p2">P2</span></td><td>工具可配置定时执行（如每日 9:00 数据日报），结果按渠道推送（企微 / 飞书 / 邮件 <span class="tbd">TBD</span>）并存档到任务历史。</td></tr>
+  </table>
+
+  <!-- M7 -->
+  <h3>M7 管理后台 <span class="tag p0">P0（部分）</span></h3>
+  <table>
+    <tr><th style="width:120px">编号</th><th style="width:150px">能力</th><th>需求描述</th></tr>
+    <tr><td><span class="frid">FR-ADMIN-01</span></td><td>成员管理 <span class="tag p1">P1</span></td><td>邀请成员（账号 + 初始密码 / 邀请链接 <span class="asm">Assumption</span>）、停用、启用、角色变更。P0 由部署初始化脚本创建成员账号。</td></tr>
+    <tr><td><span class="frid">FR-ADMIN-02</span></td><td>审核中心 <span class="tag p1">P1</span></td><td>知识 / 工具 / 数据集的统一待审队列，规则见 5.2；P0 阶段仅知识入库审核（简化队列）。</td></tr>
+    <tr><td><span class="frid">FR-ADMIN-03</span></td><td>模型与 Key <span class="tag p0">P0</span></td><td>配置模型供应商：名称、OpenAI 兼容接口地址、API Key、可用模型清单、默认模型。P0 接入国产供应商；界面同时保留国外供应商配置位（OpenAI / Anthropic 兼容 <span class="asm">Assumption</span>），启用即用，无需改版。Key 加密存储，界面上脱敏显示。成员可在「个人设置」绑定自有 Key（BYOK），BYOK 用量不计入团队配额 <span class="asm">Assumption</span>。</td></tr>
+    <tr><td><span class="frid">FR-ADMIN-04</span></td><td>用量与成本 <span class="tag p0">P0基础</span></td><td>按人 / 按工具 / 按模型统计 Token 用量与调用次数，支持时间筛选。成员级限额：超额策略（仅提醒 / 禁止调用）<span class="tbd">TBD</span>。</td></tr>
+    <tr><td><span class="frid">FR-ADMIN-05</span></td><td>审计日志 <span class="tag p0">P0基础</span></td><td>记录数据查询（FR-DB-05）、资源入库 / 删除、审核操作、成员与配置变更；仅管理员可查，保留期限 <span class="tbd">TBD</span>。</td></tr>
+  </table>
+
+  <h4>部署与迁移约束（非功能，已确认的产品决策）</h4>
+  <ul>
+    <li>单机部署、浏览器访问；全部数据与配置支持整体备份迁移到服务器，迁移后无需重建。</li>
+    <li>团队规模按 10 人设计；超出 10 人到 <span class="tbd">TBD</span> 人前不需架构调整。</li>
+    <li>系统通过模型供应商 API 使用大模型，不对模型做本地训练；调用外部 API 的数据合规要求 <span class="tbd">TBD</span>。</li>
+  </ul>
+</section>
+
+<!-- ================= 5 共享规则 ================= -->
+<section id="s5">
+  <h2 class="sec">5. 共享规则与例外</h2>
+
+  <h3>5.1 权限矩阵（唯一定义处）</h3>
+  <table>
+    <tr><th>对象 / 操作</th><th>成员（本人资源）</th><th>成员（他人 / 团队资源）</th><th>管理员</th></tr>
+    <tr><td>会话</td><td>全部权限</td><td>不可见</td><td>不可见（仅见用量）<span class="asm">Assumption</span></td></tr>
+    <tr><td>个人库知识 / 个人数据集 / 我的工具</td><td>全部权限</td><td>不可见</td><td>不可见内容，可审计入库申请</td></tr>
+    <tr><td>团队库知识</td><td>查看、检索、申请更新</td><td>查看、检索</td><td>查看、检索、删除、归档、终审</td></tr>
+    <tr><td>团队数据集 / 团队工具</td><td>查看、使用、收藏</td><td>查看、使用</td><td>查看、使用、下线、删除、终审</td></tr>
+    <tr><td>异步任务</td><td>创建、查看自己的、取消自己的</td><td>不可见</td><td>查看全部、取消</td></tr>
+    <tr><td>成员 / 模型 / Key / 用量 / 审计</td><td>仅个人设置与个人用量</td><td>—</td><td>全部权限</td></tr>
+  </table>
+
+  <h3>5.2 统一审核流（知识 / 工具 / 数据集共用，唯一定义处）</h3>
+  <ol>
+    <li><b>发起</b>：成员对个人资源提交「入团队 / 发布」申请。</li>
+    <li><b>AI 预审（自动，即时完成）</b>，四项检查：
+      <ul>
+        <li><b>查重</b>：与团队库已有内容的相似度；高相似（阈值 <span class="tbd">TBD</span>）标记并展示比对结果，不自动拦截；</li>
+        <li><b>质量评估</b>：完整性、结构（附建议，不阻断）；</li>
+        <li><b>敏感信息扫描</b>：手机号、身份证号、银行卡号等模式 <span class="asm">Assumption: 首版规则库</span>，命中处高亮展示，由人工判断；</li>
+        <li><b>资源有效性</b>（工具专属）：绑定资源是否存在、提示词是否为空。</li>
+      </ul>
+    </li>
+    <li><b>管理员终审</b>：查看预审结果与内容原文，通过或驳回（驳回理由必填，系统通知提交人）。</li>
+    <li><b>通过后</b>：进入团队空间并即时对全员可见；提交人收到通知。</li>
+    <li><b>重新提交</b>：被驳回资源修改后可再次提交，保留历史审核记录。</li>
+  </ol>
+
+  <h3>5.3 删除与恢复</h3>
+  <ul>
+    <li>所有对象删除进入回收站，保留 <span class="asm">Assumption: 30 天</span>；期限内可恢复，期满彻底清除。</li>
+    <li>被其他对象引用的资源（工具绑定的知识 / 数据集）删除时，提示影响范围（哪些工具会失效），团队资源需管理员确认。</li>
+  </ul>
+
+  <h3>5.4 成本规则</h3>
+  <ul>
+    <li>团队 Key 用量计入配额；BYOK 用量不计入（FR-ADMIN-03）。</li>
+    <li>配额展示：成员可在个人设置看到自己的用量与剩余额度；超额策略 <span class="tbd">TBD</span>（提醒或限制）。</li>
+    <li>批量任务预估：创建批量任务时展示预估 Token 消耗，超配额时需二次确认 <span class="asm">Assumption</span>。</li>
+  </ul>
+</section>
+
+<!-- ================= 6 开放问题 ================= -->
+<section id="s6">
+  <h2 class="sec">6. 开放问题</h2>
+  <table>
+    <tr><th style="width:260px">问题</th><th>影响</th><th>建议决策时点</th></tr>
+    <tr><td>国产模型起步组合（对话 / 嵌入 / 问数各选哪家）</td><td>FR-ADMIN-03 初始配置与成本</td><td>P0 部署前</td></tr>
+    <tr><td>定时报告推送渠道（企微 / 飞书 / 邮件）</td><td>FR-TASK-04 设计</td><td>P2 前</td></tr>
+    <tr><td>上传文件大小与数量限额</td><td>FR-KB-02 / FR-DB-01 校验规则</td><td>P0 开发中</td></tr>
+    <tr><td>超额策略：仅提醒 or 限制调用</td><td>FR-ADMIN-04 / 5.4</td><td>P1 前</td></tr>
+    <tr><td>调用外部模型 API 的数据合规要求（客服数据可否出网）</td><td>部署环境与模型选择</td><td>P0 部署前</td></tr>
+  </table>
+</section>
+
+<footer>
+  团队 AI 工作台 PRD V0.1 · 2026-11-20 · 标注说明：<span class="tbd">TBD</span> = 待定决策；<span class="asm">Assumption</span> = 假设（可推翻，推翻时需同步修改对应需求）
+</footer>
+
+</div>
+
+<script>
+(function(){
+  function $(s,r){return (r||document).querySelector(s)}
+  function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
+
+  /* demo: home */
+  var hmStart=$('#hm-start'),hmReset=$('#hm-reset'),hmEmpty=$('#hm-empty'),hmFilled=$('#hm-filled');
+  if(hmStart){
+    hmStart.addEventListener('click',function(){
+      hmEmpty.style.display='none';hmFilled.style.display='block';
+      $('#hm-sub').textContent='对话进行中 · 已挂载：团队知识库 + 渠道指标数据集';
+      hmStart.style.display='none';hmReset.style.display='inline-block';
+    });
+    hmReset.addEventListener('click',function(){
+      hmEmpty.style.display='block';hmFilled.style.display='none';
+      $('#hm-sub').textContent='今天想从哪里开始？';
+      hmStart.style.display='inline-block';hmReset.style.display='none';
+    });
+    $$('#demo-home .hm-item').forEach(function(it){
+      it.addEventListener('click',function(){
+        $$('#demo-home .hm-item').forEach(function(x){x.classList.remove('on')});
+        it.classList.add('on');
+      });
+    });
+  }
+
+  /* demo: review */
+  var rvPass=$('#rv-pass'),rvRjBtn=$('#rv-reject-btn'),rvRj=$('#rv-reject'),rvStatus=$('#rv-status'),rvActions=$('#rv-actions'),rvNote=$('#rv-note');
+  if(rvPass){
+    rvPass.addEventListener('click',function(){
+      rvStatus.innerHTML='<span class="badge ok">✓ 已入团队库 · 质检规范/</span>';
+      rvActions.style.display='none';rvRj.classList.remove('show');
+      rvNote.textContent='已通过：文档进入团队库「质检规范」文件夹，全员即时可检索；提交人已收到通知。';
+    });
+    rvRjBtn.addEventListener('click',function(){rvRj.classList.add('show')});
+    $('#rv-cancel').addEventListener('click',function(){rvRj.classList.remove('show')});
+    $('#rv-reject-confirm').addEventListener('click',function(){
+      rvStatus.innerHTML='<span class="badge bad">✕ 已驳回</span>';
+      rvRj.classList.remove('show');rvActions.style.display='none';
+      rvNote.textContent='已驳回：理由与补充说明已通知提交人；修改后可重新提交，历史审核记录保留。';
+    });
+  }
+
+  /* demo: askdata */
+  function showStep(n){
+    $$('#demo-askdata .step').forEach(function(s){s.classList.toggle('on',s.dataset.step==String(n))});
+    $('#ad-p1').style.display=n==1?'block':'none';
+    $('#ad-p2').style.display=n==2?'block':'none';
+    $('#ad-p3').style.display=n==3?'block':'none';
+    if(n!=2){$('#ad-fail').classList.remove('show')}
+  }
+  $$('#demo-askdata [data-go]').forEach(function(b){
+    b.addEventListener('click',function(){showStep(parseInt(b.dataset.go,10))});
+  });
+  var semBtn=$('#ad-view-sem');
+  if(semBtn){semBtn.addEventListener('click',function(){
+    var p=$('#ad-sem');p.style.display=p.style.display==='none'?'block':'none';
+  });}
+  var failBtn=$('#ad-fail-open');
+  if(failBtn){failBtn.addEventListener('click',function(){
+    showStep(2);$('#ad-fail').classList.add('show');
+  });}
+})();
+</script>
+</body>
+</html>

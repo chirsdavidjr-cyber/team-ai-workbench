@@ -1,0 +1,134 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #ffffff;
+  --foreground: #0a0a0a;
+  --muted: #f7f7f8;
+  --muted-foreground: #71717a;
+  --border: #e8e8ec;
+  --accent: #059669;
+  --accent-foreground: #ffffff;
+  --accent-soft: #ecfdf5;
+  --surface: #ffffff;
+}
+
+.dark {
+  --background: #0a0a0b;
+  --foreground: #f4f4f5;
+  --muted: #17171a;
+  --muted-foreground: #a1a1aa;
+  --border: #26262b;
+  --accent: #10b981;
+  --accent-foreground: #052e21;
+  --accent-soft: #06231a;
+  --surface: #121215;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border-subtle: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-soft: var(--accent-soft);
+  --color-surface: var(--surface);
+  --font-sans: -apple-system, BlinkMacSystemFont, "Inter", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+}
+
+html {
+  font-family: var(--font-sans);
+  background: var(--background);
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--muted-foreground) 35%, transparent) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--muted-foreground) 30%, transparent);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+textarea,
+input {
+  font-family: inherit;
+}
+
+/* AI 回复 Markdown 排版 */
+.md-body {
+  font-size: 14.5px;
+  line-height: 1.75;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+.md-body img { max-width: 100%; border-radius: 10px; }
+.md-body > :first-child { margin-top: 0; }
+.md-body > :last-child { margin-bottom: 0; }
+.md-body p { margin: 0.5em 0; }
+.md-body h1, .md-body h2, .md-body h3, .md-body h4 {
+  font-weight: 600; margin: 1.1em 0 0.45em; line-height: 1.4;
+}
+.md-body h1 { font-size: 1.35em; }
+.md-body h2 { font-size: 1.22em; }
+.md-body h3 { font-size: 1.1em; }
+.md-body ul, .md-body ol { margin: 0.5em 0; padding-left: 1.5em; }
+.md-body ul { list-style: disc; }
+.md-body ol { list-style: decimal; }
+.md-body li { margin: 0.25em 0; }
+.md-body a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+.md-body blockquote {
+  margin: 0.7em 0; padding: 0.1em 0 0.1em 1em;
+  border-left: 3px solid var(--border); color: var(--muted-foreground);
+}
+.md-body code {
+  font-family: var(--font-mono); font-size: 0.88em;
+  background: var(--muted); border-radius: 5px; padding: 0.1em 0.4em;
+}
+.md-body pre {
+  margin: 0.75em 0; border-radius: 10px; padding: 13px 15px;
+  overflow-x: auto; line-height: 1.6;
+  white-space: pre-wrap; word-break: break-word;
+}
+.md-body pre::-webkit-scrollbar { display: none; }
+.md-body pre { scrollbar-width: none; }
+.md-body pre code { background: none; padding: 0; font-size: 12.5px; color: inherit; }
+.md-body table { border-collapse: collapse; margin: 0.75em 0; font-size: 13.5px; display: block; overflow-x: auto; scrollbar-width: none; }
+.md-body table::-webkit-scrollbar { display: none; }
+.md-body th, .md-body td { border: 1px solid var(--border); padding: 6px 12px; text-align: left; word-break: break-word; overflow-wrap: anywhere; }
+.md-body th { background: var(--muted); font-weight: 600; }
+.md-body td { word-break: break-word; }
+.md-body hr { border: none; border-top: 1px solid var(--border); margin: 1.2em 0; }
+.md-body strong { font-weight: 600; }
+
+/* 隐藏滚动条（保留滚动能力） */
+.hide-scrollbar { scrollbar-width: none; }
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+
+/* Obsidian 风格双链 */
+.md-body a.wikilink {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px dashed color-mix(in srgb, var(--accent) 60%, transparent);
+  cursor: pointer;
+}
+.md-body a.wikilink:hover { border-bottom-style: solid; }
