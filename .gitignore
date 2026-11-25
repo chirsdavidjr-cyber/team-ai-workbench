@@ -29,6 +29,7 @@ logs/
 
 # IDE / tooling
 .DS_Store
+*.bak
 .trae/
 .trae-html-share-packages/
 .screenshots/
